@@ -29,7 +29,23 @@ async function run() {
     await client.connect();
 
 
+    const studentsCollection = client.db("musicFairyDB").collection("students");
     const classesCollection = client.db("musicFairyDB").collection("classes");
+
+     // users related apis 
+
+    
+    // user post api 
+    app.post('/students', async(req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await studentsCollection.findOne(query);
+      if(existingUser){
+        return res.send({message: "user already exit"})
+      }
+      const result = await studentsCollection.insertOne(user);
+      res.send(result);
+    })
 
 
 
