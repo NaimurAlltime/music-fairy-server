@@ -122,6 +122,13 @@ async function run() {
         res.send(result);
     })
 
+     // post api classes with specific admin role ( todo: verifyJWT, verifyAdmin)
+     app.post('/classes', async(req, res) => {
+      const newItem = req.body;
+      const result = await classesCollection.insertOne(newItem);
+      res.send(result);
+    })
+
 
 
     // Send a ping to confirm a successful connection
