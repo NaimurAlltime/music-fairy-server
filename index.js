@@ -84,6 +84,21 @@ async function run() {
     })
 
 
+      // students update api with instructor 
+      app.patch('/students/instructor/:id', async(req, res) => {
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id) };
+  
+        const updateDoc = {
+          $set: {
+            role: 'instructor'
+          },
+        };
+  
+        const result = await studentsCollection.updateOne(filter, updateDoc);
+        res.send(result);
+      })
+
       // students update api with admin 
       app.patch('/students/admin/:id', async(req, res) => {
         const id = req.params.id;
