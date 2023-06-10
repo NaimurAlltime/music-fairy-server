@@ -32,10 +32,14 @@ async function run() {
     const studentsCollection = client.db("musicFairyDB").collection("students");
     const classesCollection = client.db("musicFairyDB").collection("classes");
 
-     // users related apis 
-
+     // students related apis 
+    // students get api 
+    app.get('/students', async(req, res) => {
+      const result = await studentsCollection.find().toArray();
+      res.send(result);
+    })
     
-    // user post api 
+    // students post api 
     app.post('/students', async(req, res) => {
       const user = req.body;
       const query = { email: user.email };
