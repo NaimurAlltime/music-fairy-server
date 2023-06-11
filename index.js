@@ -53,6 +53,7 @@ async function run() {
 
     const studentsCollection = client.db("musicFairyDB").collection("students");
     const classesCollection = client.db("musicFairyDB").collection("classes");
+    const cartCollection = client.db("musicFairyDB").collection("carts");
 
 
      // jwt api 
@@ -174,6 +175,45 @@ async function run() {
       };
 
       const result = await classesCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    })
+
+
+
+    
+  
+    //select cart collection
+
+    // get api 
+    app.get('/carts', verifyJWT, async(req, res) => {
+      const email = req.query.email;
+      // console.log(email);
+      if(!email){
+        res.send([])
+      }
+
+      const decodeEmail = req.decoded.email;
+      if(email !== decodeEmail){
+        return res.status(403).send({error: 1, message: 'forbidden access'});
+      }
+
+      const query = { email: email }
+      const result = await cartCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    // post api 
+    app.post('/carts', async(req, res) => {
+        const item = req.body;
+        const result = await cartCollection.insertOne(item);
+        res.send(result);
+    })
+
+    // delete api 
+    app.delete('/carts/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cartCollection.deleteOne(query);
       res.send(result);
     })
 
