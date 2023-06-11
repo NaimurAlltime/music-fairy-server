@@ -129,6 +129,56 @@ async function run() {
       res.send(result);
     })
 
+     // classes update api with status approved
+     app.patch('/classes/approved/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+
+      const updateDoc = {
+        $set: {
+          status: 'approved'
+        },
+      };
+
+      const result = await classesCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+
+    // classes update api with status denied 
+    app.patch('/classes/denied/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+
+      const updateDoc = {
+        $set: {
+          status: 'denied'
+        },
+      };
+
+      const result = await classesCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+
+
+     // classes update api with status feedback 
+     app.patch('/classes/feedback/:id', async(req, res) => {
+      const id = req.params.id;
+      const feedback = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+
+      const updateDoc = {
+        $set: {
+          feedback: feedback
+        },
+      };
+
+      const result = await classesCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    })
+
+
+
 
 
     // Send a ping to confirm a successful connection
