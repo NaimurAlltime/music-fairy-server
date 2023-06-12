@@ -284,6 +284,12 @@ async function run() {
     })
 
 
+     // get api all payment data 
+     app.get('/payments', async(req, res) => {
+      const result = await paymentCollection.find().toArray();
+      res.send(result);
+  })
+
  
 
 
