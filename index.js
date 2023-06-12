@@ -284,14 +284,18 @@ async function run() {
     })
 
 
-     // get api all payment data 
-     app.get('/payments', async(req, res) => {
-      const result = await paymentCollection.find().toArray();
-      res.send(result);
-  })
+       // payments get api sum data with user email
+      app.get('/payments', async(req, res) =>{
+        let query = {}
+        if(req.query?.email){
+          query = {email: req.query.email}
+        }
+        const cursor = paymentCollection.find(query)
+        const result = await cursor.toArray();
+        res.send(result)
+      })
 
  
-
 
 
     // Send a ping to confirm a successful connection
