@@ -65,6 +65,19 @@ async function run() {
       res.send({token});
     })
 
+
+     // verify admin function 
+     // Warning: use verifyJWT before using verifyAdmin
+     const verifyAdmin = async (req, res, next) => {
+      const email = req.decoded.email;
+      const query = { email: email }
+      const user = await studentsCollection.findOne(query);
+      if (user?.role !== 'admin') {
+        return res.status(403).send({ error: true, message: 'forbidden message' });
+      }
+      next();
+    }
+
      // students related apis 
     // students get api 
     app.get('/students', verifyJWT, async(req, res) => {
@@ -113,6 +126,21 @@ async function run() {
   
         const result = await studentsCollection.updateOne(filter, updateDoc);
         res.send(result);
+      })
+
+
+        // check admin role [security layer, same email, check admin]
+      app.get('/students/admin/:email', verifyJWT, async(req, res) => {
+        const email = req.params.email;
+        
+        if(req.decoded.email !== email) {
+          res.send({ admin: false })
+        }
+
+        const query = { email: email }
+        const user = await studentsCollection.findOne(query);
+        const result = { admin: user?.role === 'admin' }
+        res.send(result)
       })
 
 
