@@ -146,12 +146,29 @@ async function run() {
       })
 
 
+        // check instructor role [security layer, same email, check instructor]
+        app.get('/students/instructor/:email', verifyJWT, async(req, res) => {
+          const email = req.params.email;
+          
+          if(req.decoded.email !== email) {
+            res.send({ instructor: false })
+          }
+  
+          const query = { email: email }
+          const user = await studentsCollection.findOne(query);
+          const result = { instructor: user?.role === 'instructor' }
+          res.send(result)
+        })
+
+
 
     // get api all classes data 
     app.get('/classes', async(req, res) => {
         const result = await classesCollection.find().toArray();
         res.send(result);
     })
+
+
 
      // post api classes with specific admin role ( todo: verifyJWT, verifyAdmin)
      app.post('/classes', async(req, res) => {
