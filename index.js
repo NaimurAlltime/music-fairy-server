@@ -56,6 +56,7 @@ async function run() {
     const classesCollection = client.db("musicFairyDB").collection("classes");
     const cartCollection = client.db("musicFairyDB").collection("carts");
     const paymentCollection = client.db("musicFairyDB").collection("payments");
+    const newsCollection = client.db("musicFairyDB").collection("latestNews");
 
 
      // jwt api 
@@ -328,16 +329,23 @@ async function run() {
     })
 
 
-       // payments get api sum data with user email
-      app.get('/payments', async(req, res) =>{
-        let query = {}
-        if(req.query?.email){
-          query = {email: req.query.email}
-        }
-        const cursor = paymentCollection.find(query)
-        const result = await cursor.toArray();
-        res.send(result)
-      })
+      // payments get api sum data with user email
+    app.get('/payments', async(req, res) =>{
+      let query = {}
+      if(req.query?.email){
+        query = {email: req.query.email}
+      }
+      const cursor = paymentCollection.find(query).sort({ date: -1 })
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+
+
+      // get api all news data 
+   app.get('/news', async(req, res) => {
+      const result = await newsCollection.find().toArray();
+      res.send(result);
+   })
 
  
 
