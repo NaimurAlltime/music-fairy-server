@@ -169,6 +169,19 @@ async function run() {
     })
 
 
+    // get api all approved classes data 
+       app.get('/classes/approved', async(req, res) => {
+        const result = await classesCollection.find({status:"approved"}).toArray();
+        res.send(result);
+    })
+
+      // get api limit 6 approved classes data 
+      app.get('/popular/classes/approved', async(req, res) => {
+        const result = await classesCollection.find({status:"approved"}).limit(6).toArray();
+        res.send(result);
+    })
+
+
 
      // post api classes with specific admin role ( todo: verifyJWT, verifyAdmin)
      app.post('/classes', async(req, res) => {
@@ -224,6 +237,20 @@ async function run() {
       const result = await classesCollection.updateOne(filter, updateDoc, options);
       res.send(result);
     })
+
+
+    // instructor data 
+    // all instructor get api 
+    app.get('/allinstructors', async(req, res) => {
+      const result = await studentsCollection.find({role: "instructor"}).toArray();
+      res.send(result);
+    })
+
+       // limit 6 instructor get api 
+       app.get('/popular/instructors', async(req, res) => {
+        const result = await studentsCollection.find({role: "instructor"}).limit(6).toArray();
+        res.send(result);
+      })
 
   
     //select cart collection
